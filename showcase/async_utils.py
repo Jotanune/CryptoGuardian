@@ -25,6 +25,7 @@ T = TypeVar("T")
 @dataclass
 class RetryPolicy:
     """Configuration for exponential backoff retry."""
+
     max_retries: int = 3
     base_delay: float = 1.0
     max_delay: float = 60.0
@@ -56,7 +57,11 @@ async def async_retry(
                 delay *= 0.5 + random.random()  # noqa: S311
             logger.warning(
                 "Retry {}/{} for {} after {:.1f}s — {}",
-                attempt + 1, policy.max_retries, func.__name__, delay, exc,
+                attempt + 1,
+                policy.max_retries,
+                func.__name__,
+                delay,
+                exc,
             )
             await asyncio.sleep(delay)
     raise last_exc  # type: ignore[misc]

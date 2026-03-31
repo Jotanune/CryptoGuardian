@@ -80,8 +80,10 @@ class RiskManager:
             logger.info(
                 "[RISK] New day: eq ${:.2f}, peak ${:.2f},"
                 " DD {:.2f}%, yest PnL ${:.2f}",
-                current_equity, self.equity_peak,
-                self.current_drawdown_pct * 100, old_pnl,
+                current_equity,
+                self.equity_peak,
+                self.current_drawdown_pct * 100,
+                old_pnl,
             )
             return True
         return False
@@ -161,7 +163,7 @@ class RiskManager:
 
         heat = self._calculate_portfolio_heat()
         if heat >= self._max_heat:
-            return False, f"Portfolio heat ({heat*100:.1f}%) exceeds max"
+            return False, f"Portfolio heat ({heat * 100:.1f}%) exceeds max"
 
         sym = signal.symbol
         base_asset = sym.split("/")[0] if "/" in sym else sym
@@ -170,8 +172,7 @@ class RiskManager:
 
         if self.consecutive_losses >= self._max_consecutive_losses:
             return False, (
-                f"Circuit breaker: {self.consecutive_losses}"
-                " consecutive losses"
+                f"Circuit breaker: {self.consecutive_losses} consecutive losses"
             )
 
         return True, "OK"
@@ -192,8 +193,7 @@ class RiskManager:
         rolling Sharpe ratio (not shown — proprietary allocation logic).
         """
         sl_distance_pct = (
-            abs(signal.entry_price - signal.stop_loss)
-            / signal.entry_price
+            abs(signal.entry_price - signal.stop_loss) / signal.entry_price
         )
         if sl_distance_pct <= 0:
             return 0.0

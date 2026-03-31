@@ -33,24 +33,59 @@ BINANCE_FAPI_URL = "https://fapi.binance.com/fapi/v1/klines"
 
 # ── Binance symbol mapping (70+ perpetuals) ──────────────────────────
 _BINANCE_SYMBOL_MAP = {
-    "BTC": "BTCUSDT", "ETH": "ETHUSDT", "SOL": "SOLUSDT",
-    "BNB": "BNBUSDT", "XRP": "XRPUSDT", "ADA": "ADAUSDT",
-    "DOGE": "DOGEUSDT", "AVAX": "AVAXUSDT", "DOT": "DOTUSDT",
-    "LINK": "LINKUSDT", "NEAR": "NEARUSDT", "APT": "APTUSDT",
-    "SUI": "SUIUSDT", "SEI": "SEIUSDT", "TIA": "TIAUSDT",
-    "ARB": "ARBUSDT", "OP": "OPUSDT", "MATIC": "MATICUSDT",
-    "ATOM": "ATOMUSDT", "FTM": "FTMUSDT", "INJ": "INJUSDT",
-    "STX": "STXUSDT", "ALGO": "ALGOUSDT", "HBAR": "HBARUSDT",
-    "ICP": "ICPUSDT", "FET": "FETUSDT", "RNDR": "RNDRUSDT",
-    "TAO": "TAOUSDT", "AR": "ARUSDT", "AAVE": "AAVEUSDT",
-    "UNI": "UNIUSDT", "SNX": "SNXUSDT", "MKR": "MKRUSDT",
-    "CRV": "CRVUSDT", "DYDX": "DYDXUSDT", "PENDLE": "PENDLEUSDT",
-    "JUP": "JUPUSDT", "IMX": "IMXUSDT", "GALA": "GALAUSDT",
-    "PEPE": "PEPEUSDT", "SHIB": "SHIBUSDT", "BONK": "BONKUSDT",
-    "WIF": "WIFUSDT", "FLOKI": "FLOKIUSDT", "GRT": "GRTUSDT",
-    "FIL": "FILUSDT", "PYTH": "PYTHUSDT", "LTC": "LTCUSDT",
-    "BCH": "BCHUSDT", "ETC": "ETCUSDT", "XLM": "XLMUSDT",
-    "EOS": "EOSUSDT", "ENS": "ENSUSDT",
+    "BTC": "BTCUSDT",
+    "ETH": "ETHUSDT",
+    "SOL": "SOLUSDT",
+    "BNB": "BNBUSDT",
+    "XRP": "XRPUSDT",
+    "ADA": "ADAUSDT",
+    "DOGE": "DOGEUSDT",
+    "AVAX": "AVAXUSDT",
+    "DOT": "DOTUSDT",
+    "LINK": "LINKUSDT",
+    "NEAR": "NEARUSDT",
+    "APT": "APTUSDT",
+    "SUI": "SUIUSDT",
+    "SEI": "SEIUSDT",
+    "TIA": "TIAUSDT",
+    "ARB": "ARBUSDT",
+    "OP": "OPUSDT",
+    "MATIC": "MATICUSDT",
+    "ATOM": "ATOMUSDT",
+    "FTM": "FTMUSDT",
+    "INJ": "INJUSDT",
+    "STX": "STXUSDT",
+    "ALGO": "ALGOUSDT",
+    "HBAR": "HBARUSDT",
+    "ICP": "ICPUSDT",
+    "FET": "FETUSDT",
+    "RNDR": "RNDRUSDT",
+    "TAO": "TAOUSDT",
+    "AR": "ARUSDT",
+    "AAVE": "AAVEUSDT",
+    "UNI": "UNIUSDT",
+    "SNX": "SNXUSDT",
+    "MKR": "MKRUSDT",
+    "CRV": "CRVUSDT",
+    "DYDX": "DYDXUSDT",
+    "PENDLE": "PENDLEUSDT",
+    "JUP": "JUPUSDT",
+    "IMX": "IMXUSDT",
+    "GALA": "GALAUSDT",
+    "PEPE": "PEPEUSDT",
+    "SHIB": "SHIBUSDT",
+    "BONK": "BONKUSDT",
+    "WIF": "WIFUSDT",
+    "FLOKI": "FLOKIUSDT",
+    "GRT": "GRTUSDT",
+    "FIL": "FILUSDT",
+    "PYTH": "PYTHUSDT",
+    "LTC": "LTCUSDT",
+    "BCH": "BCHUSDT",
+    "ETC": "ETCUSDT",
+    "XLM": "XLMUSDT",
+    "EOS": "EOSUSDT",
+    "ENS": "ENSUSDT",
 }
 
 ALL_SCAN_COINS = sorted(_BINANCE_SYMBOL_MAP.keys())
@@ -59,6 +94,7 @@ ALL_SCAN_COINS = sorted(_BINANCE_SYMBOL_MAP.keys())
 # ======================================================================
 # Hyperliquid — Paginated Forward Download
 # ======================================================================
+
 
 async def download_candles_hyperliquid(
     symbol: str,
@@ -108,14 +144,16 @@ async def download_candles_hyperliquid(
 
             empty_streak = 0
             for candle in data:
-                all_candles.append({
-                    "timestamp": candle["t"],
-                    "open": float(candle["o"]),
-                    "high": float(candle["h"]),
-                    "low": float(candle["l"]),
-                    "close": float(candle["c"]),
-                    "volume": float(candle["v"]),
-                })
+                all_candles.append(
+                    {
+                        "timestamp": candle["t"],
+                        "open": float(candle["o"]),
+                        "high": float(candle["h"]),
+                        "low": float(candle["l"]),
+                        "close": float(candle["c"]),
+                        "volume": float(candle["v"]),
+                    }
+                )
 
             last_ts = data[-1]["t"]
             if last_ts <= current_start:
@@ -124,7 +162,10 @@ async def download_candles_hyperliquid(
 
             logger.info(
                 "[HL] {} {} — batch {} candles (total: {})",
-                symbol, interval, len(data), len(all_candles),
+                symbol,
+                interval,
+                len(data),
+                len(all_candles),
             )
             await asyncio.sleep(0.5)  # Rate limiting
 
@@ -134,6 +175,7 @@ async def download_candles_hyperliquid(
 # ======================================================================
 # Binance Futures — Paginated Forward, 1500/request, No API Key
 # ======================================================================
+
 
 async def download_candles_binance(
     symbol: str,
@@ -175,14 +217,16 @@ async def download_candles_binance(
                 break
 
             for k in data:
-                all_candles.append({
-                    "timestamp": k[0],
-                    "open": float(k[1]),
-                    "high": float(k[2]),
-                    "low": float(k[3]),
-                    "close": float(k[4]),
-                    "volume": float(k[5]),
-                })
+                all_candles.append(
+                    {
+                        "timestamp": k[0],
+                        "open": float(k[1]),
+                        "high": float(k[2]),
+                        "low": float(k[3]),
+                        "close": float(k[4]),
+                        "volume": float(k[5]),
+                    }
+                )
 
             last_ts = data[-1][0]
             if last_ts <= current_start:
@@ -191,7 +235,10 @@ async def download_candles_binance(
 
             logger.info(
                 "[BN] {} {} — batch {} candles (total: {})",
-                binance_sym, interval, len(data), len(all_candles),
+                binance_sym,
+                interval,
+                len(data),
+                len(all_candles),
             )
             await asyncio.sleep(0.25)
 
@@ -203,8 +250,12 @@ async def download_candles_binance(
 # ======================================================================
 
 _INTERVAL_MS = {
-    "1m": 60_000, "5m": 300_000, "15m": 900_000,
-    "1h": 3_600_000, "4h": 14_400_000, "1d": 86_400_000,
+    "1m": 60_000,
+    "5m": 300_000,
+    "15m": 900_000,
+    "1h": 3_600_000,
+    "4h": 14_400_000,
+    "1d": 86_400_000,
 }
 
 
@@ -234,6 +285,7 @@ def _parse_date(s: str) -> int:
 # ======================================================================
 # Download + Save to Parquet
 # ======================================================================
+
 
 async def download_and_save(
     symbol: str,
@@ -266,7 +318,12 @@ async def download_and_save(
     df.to_parquet(out_path, index=False, engine="pyarrow")
     logger.info(
         "[DL] [{}/{}] Saved {} candles → {} ({} → {})",
-        src_tag, symbol.upper(), len(df), out_path, start, end,
+        src_tag,
+        symbol.upper(),
+        len(df),
+        out_path,
+        start,
+        end,
     )
     return out_path
 
@@ -274,6 +331,7 @@ async def download_and_save(
 # ======================================================================
 # CLI Entry Point
 # ======================================================================
+
 
 def main() -> None:
     symbols = ["BTC", "ETH", "SOL"]
@@ -305,8 +363,11 @@ def main() -> None:
             print(f"  [{i}/{len(symbols)}] {symbol}...")
             try:
                 await download_and_save(
-                    symbol.strip(), interval,
-                    source=source, start_ts=start_ts, end_ts=end_ts,
+                    symbol.strip(),
+                    interval,
+                    source=source,
+                    start_ts=start_ts,
+                    end_ts=end_ts,
                 )
             except Exception as e:
                 logger.warning("[DL] Failed {}: {}", symbol, e)

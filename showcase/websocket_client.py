@@ -78,7 +78,9 @@ class WebSocketClient:
     # ── Public API ────────────────────────────────────────────────────
 
     def on(
-        self, channel: str, handler: Callable[..., Coroutine[Any, Any, None]],
+        self,
+        channel: str,
+        handler: Callable[..., Coroutine[Any, Any, None]],
     ) -> None:
         """Register an async handler for a specific channel (l2Book, trades, etc.)."""
         self._handlers.setdefault(channel, []).append(handler)
@@ -150,7 +152,8 @@ class WebSocketClient:
             except websockets.ConnectionClosed as e:
                 logger.warning(
                     "WebSocket disconnected: code={} reason={}",
-                    e.code, e.reason,
+                    e.code,
+                    e.reason,
                 )
             except Exception as e:
                 logger.error("WebSocket error: {}", e)

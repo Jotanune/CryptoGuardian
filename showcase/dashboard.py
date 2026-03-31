@@ -36,6 +36,7 @@ except ImportError:
 
 class DashboardDataSource(Protocol):
     """Protocol for providing data to the dashboard."""
+
     def get_dashboard_data(self) -> dict[str, Any]: ...
 
 
@@ -157,7 +158,7 @@ class Dashboard:
         for t in data.get("recent_trades", [])[:5]:
             pnl = t.get("pnl", 0)
             style = "green" if pnl >= 0 else "red"
-            sym = t.get('symbol', '')
+            sym = t.get("symbol", "")
             table.add_row(f"  {sym}", Text(f"${pnl:+,.2f}", style=style))
 
         return Panel(table)

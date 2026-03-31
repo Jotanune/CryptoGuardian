@@ -79,7 +79,8 @@ class KillSwitch:
                 except Exception as e:
                     logger.error(
                         "[KILL] Cancel attempt {}/3 failed: {}",
-                        attempt + 1, e,
+                        attempt + 1,
+                        e,
                     )
                     if attempt < 2:
                         await asyncio.sleep(2)
@@ -94,7 +95,9 @@ class KillSwitch:
                         is_long = float(pos.get("size", 0)) > 0
                         if size > 0:
                             await order_manager.place_market_order(
-                                asset, not is_long, size,
+                                asset,
+                                not is_long,
+                                size,
                             )
                             logger.info("[KILL] Closed {} {:.6f}", asset, size)
                     break
