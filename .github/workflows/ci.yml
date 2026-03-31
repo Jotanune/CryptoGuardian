@@ -116,4 +116,4 @@ jobs:
 
       - name: Verify non-root user
         run: |
-          docker run --rm cryptoguardian:test whoami | grep -q cryptoguardian
+          docker run --rm --entrypoint whoami cryptoguardian:test | grep -q cryptoguardian
