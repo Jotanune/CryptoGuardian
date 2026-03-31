@@ -17,7 +17,7 @@ from typing import TYPE_CHECKING, Any
 if TYPE_CHECKING:
     from collections.abc import Callable, Coroutine
 
-    from websockets.legacy.client import WebSocketClientProtocol
+    from websockets import ClientConnection
 
 import orjson
 import websockets
@@ -50,7 +50,7 @@ class WebSocketClient:
         self._max_reconnect = max_reconnect_attempts
         self._reconnect_delay = reconnect_delay
         self._heartbeat_interval = heartbeat_interval
-        self._ws: WebSocketClientProtocol | None = None
+        self._ws: ClientConnection | None = None
         self._handlers: dict[str, list[Callable[..., Coroutine[Any, Any, None]]]] = {}
         self._subscriptions: list[dict[str, Any]] = []
         self._reconnect_count = 0
@@ -193,7 +193,7 @@ class WebSocketClient:
 
     # ── Message Processing ────────────────────────────────────────────
 
-    async def _receive_loop(self, ws: WebSocketClientProtocol) -> None:
+    async def _receive_loop(self, ws: ClientConnection) -> None:
         """Process incoming messages until disconnect."""
         async for raw in ws:
             if self._shutdown_event.is_set():
