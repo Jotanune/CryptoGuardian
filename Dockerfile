@@ -13,21 +13,17 @@ RUN groupadd -r cryptoguardian && useradd -r -g cryptoguardian -m cryptoguardian
 WORKDIR /app
 
 # Install Python deps first (Docker cache layer optimization)
-COPY pyproject.toml ./
-RUN pip install --no-cache-dir -e ".[dev]" 2>/dev/null || pip install --no-cache-dir .
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy source
-COPY src/ src/
-COPY config/ config/
-COPY scripts/ scripts/
+COPY showcase/ showcase/
+COPY examples/ examples/
+COPY dashboard_demo.py ./
 
 # Data & logs directories
 RUN mkdir -p data logs && chown -R cryptoguardian:cryptoguardian /app
 
 USER cryptoguardian
 
-# Health check — bot exposes HTTP /health endpoint
-HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
-    CMD curl -f http://localhost:8080/health || exit 1
-
-ENTRYPOINT ["python", "-m", "src.main"]
+ENTRYPOINT ["python", "dashboard_demo.py"]
