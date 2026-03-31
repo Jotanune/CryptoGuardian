@@ -217,7 +217,11 @@ def _to_df(candles: list[dict]) -> pd.DataFrame:
         return pd.DataFrame()
     df = pd.DataFrame(candles)
     df["timestamp"] = pd.to_datetime(df["timestamp"], unit="ms", utc=True)
-    df = df.drop_duplicates(subset="timestamp").sort_values("timestamp").reset_index(drop=True)
+    df = (
+        df.drop_duplicates(subset="timestamp")
+        .sort_values("timestamp")
+        .reset_index(drop=True)
+    )
     return df
 
 

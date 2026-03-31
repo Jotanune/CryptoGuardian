@@ -78,7 +78,8 @@ class RiskManager:
             self._last_day = today
 
             logger.info(
-                "[RISK] New day: equity ${:.2f}, peak ${:.2f}, DD {:.2f}%, yesterday PnL ${:.2f}",
+                "[RISK] New day: eq ${:.2f}, peak ${:.2f},"
+                " DD {:.2f}%, yest PnL ${:.2f}",
                 current_equity, self.equity_peak,
                 self.current_drawdown_pct * 100, old_pnl,
             )
@@ -107,7 +108,10 @@ class RiskManager:
         if dd >= self._dd_scale_threshold:
             if self.risk_multiplier != 0.5:
                 self.risk_multiplier = 0.5
-                logger.warning("[RISK] DD scaling: {:.2f}% — risk reduced to 0.5x", dd * 100)
+                logger.warning(
+                    "[RISK] DD scaling: {:.2f}% — risk reduced to 0.5x",
+                    dd * 100,
+                )
         else:
             if self.risk_multiplier != 1.0:
                 self.risk_multiplier = 1.0
@@ -118,10 +122,16 @@ class RiskManager:
             daily_loss_pct = -self.daily_pnl / self.daily_reference_equity
             if daily_loss_pct >= self._max_daily_loss and not self.is_soft_stopped:
                 self.is_soft_stopped = True
-                logger.warning("[RISK] SOFT STOP: daily loss {:.2f}%", daily_loss_pct * 100)
+                logger.warning(
+                    "[RISK] SOFT STOP: daily loss {:.2f}%",
+                    daily_loss_pct * 100,
+                )
             if daily_loss_pct >= self._max_daily_loss_hard and not self.is_hard_stopped:
                 self.is_hard_stopped = True
-                logger.error("[RISK] HARD STOP: daily loss {:.2f}%", daily_loss_pct * 100)
+                logger.error(
+                    "[RISK] HARD STOP: daily loss {:.2f}%",
+                    daily_loss_pct * 100,
+                )
 
         # Total drawdown kill switch
         if dd >= self._max_total_dd:
@@ -153,12 +163,16 @@ class RiskManager:
         if heat >= self._max_heat:
             return False, f"Portfolio heat ({heat*100:.1f}%) exceeds max"
 
-        base_asset = signal.symbol.split("/")[0] if "/" in signal.symbol else signal.symbol
+        sym = signal.symbol
+        base_asset = sym.split("/")[0] if "/" in sym else sym
         if self._count_correlated(base_asset) >= self._max_correlated:
             return False, f"Correlated exposure for {base_asset} at max"
 
         if self.consecutive_losses >= self._max_consecutive_losses:
-            return False, f"Circuit breaker: {self.consecutive_losses} consecutive losses"
+            return False, (
+                f"Circuit breaker: {self.consecutive_losses}"
+                " consecutive losses"
+            )
 
         return True, "OK"
 
@@ -177,7 +191,10 @@ class RiskManager:
         Uses DynamicAllocator for per-asset risk adjustment based on
         rolling Sharpe ratio (not shown — proprietary allocation logic).
         """
-        sl_distance_pct = abs(signal.entry_price - signal.stop_loss) / signal.entry_price
+        sl_distance_pct = (
+            abs(signal.entry_price - signal.stop_loss)
+            / signal.entry_price
+        )
         if sl_distance_pct <= 0:
             return 0.0
 
@@ -202,7 +219,10 @@ class RiskManager:
             self.consecutive_losses += 1
             if self.consecutive_losses >= self._max_consecutive_losses:
                 self.is_soft_stopped = True
-                logger.warning("[RISK] Circuit breaker: {} losses. Paused.", self.consecutive_losses)
+                logger.warning(
+                    "[RISK] Circuit breaker: {} losses. Paused.",
+                    self.consecutive_losses,
+                )
         else:
             self.consecutive_losses = 0
 

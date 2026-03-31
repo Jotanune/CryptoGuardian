@@ -12,7 +12,8 @@ from __future__ import annotations
 
 import asyncio
 import time
-from typing import Any, Callable, Coroutine
+from collections.abc import Callable, Coroutine
+from typing import Any
 
 import orjson
 import websockets
@@ -74,7 +75,9 @@ class WebSocketClient:
 
     # ── Public API ────────────────────────────────────────────────────
 
-    def on(self, channel: str, handler: Callable[..., Coroutine[Any, Any, None]]) -> None:
+    def on(
+        self, channel: str, handler: Callable[..., Coroutine[Any, Any, None]],
+    ) -> None:
         """Register an async handler for a specific channel (l2Book, trades, etc.)."""
         self._handlers.setdefault(channel, []).append(handler)
 
@@ -143,13 +146,17 @@ class WebSocketClient:
                             resub_task.cancel()
 
             except websockets.ConnectionClosed as e:
-                logger.warning("WebSocket disconnected: code={} reason={}", e.code, e.reason)
+                logger.warning(
+                    "WebSocket disconnected: code={} reason={}",
+                    e.code, e.reason,
+                )
             except Exception as e:
                 logger.error("WebSocket error: {}", e)
             finally:
                 self._ws = None
                 # Reset reconnect counter if connection was stable (>60s)
-                uptime = asyncio.get_event_loop().time() - connect_time if connect_time else 0
+                loop_time = asyncio.get_event_loop().time()
+                uptime = loop_time - connect_time if connect_time else 0
                 if uptime > 60:
                     self._reconnect_count = 0
 
@@ -190,7 +197,8 @@ class WebSocketClient:
             try:
                 data = orjson.loads(raw)
             except (orjson.JSONDecodeError, ValueError):
-                logger.error("Malformed JSON: {}", raw[:200] if isinstance(raw, (str, bytes)) else raw)
+                preview = raw[:200] if isinstance(raw, (str, bytes)) else raw
+                logger.error("Malformed JSON: {}", preview)
                 continue
 
             channel = data.get("channel")

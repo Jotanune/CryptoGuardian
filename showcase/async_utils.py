@@ -11,8 +11,9 @@ from __future__ import annotations
 import asyncio
 import random
 from abc import ABC, abstractmethod
+from collections.abc import Callable, Coroutine
 from dataclasses import dataclass
-from typing import Any, Callable, Coroutine, TypeVar
+from typing import Any, TypeVar
 
 from loguru import logger
 

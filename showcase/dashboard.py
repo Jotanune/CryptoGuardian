@@ -31,7 +31,7 @@ try:
     from rich.table import Table
     from rich.text import Text
 except ImportError:
-    raise ImportError("Install rich: pip install rich")
+    raise ImportError("Install rich: pip install rich") from None
 
 
 class DashboardDataSource(Protocol):
@@ -140,10 +140,15 @@ class Dashboard:
         ws = data.get("websocket", {})
         ws_status = "Connected" if ws.get("connected", False) else "Disconnected"
 
-        table.add_row("SMC Engine", Text(smc_status, style="green" if smc_status == "ON" else "red"))
-        table.add_row("Pairs Engine", Text(pairs_status, style="green" if pairs_status == "ON" else "red"))
-        table.add_row("Kill Switch", Text(kill_status, style="red" if kill_status == "ON" else "green"))
-        table.add_row("WebSocket", Text(ws_status, style="green" if ws_status == "Connected" else "red"))
+        smc_style = "green" if smc_status == "ON" else "red"
+        pairs_style = "green" if pairs_status == "ON" else "red"
+        kill_style = "red" if kill_status == "ON" else "green"
+        ws_style = "green" if ws_status == "Connected" else "red"
+
+        table.add_row("SMC Engine", Text(smc_status, style=smc_style))
+        table.add_row("Pairs Engine", Text(pairs_status, style=pairs_style))
+        table.add_row("Kill Switch", Text(kill_status, style=kill_style))
+        table.add_row("WebSocket", Text(ws_status, style=ws_style))
         table.add_row("WS Latency", f"{ws.get('latency_ms', 0):.0f}ms")
         table.add_row("Msg/sec", str(ws.get("msg_per_sec", 0)))
         table.add_row("", "")
@@ -152,6 +157,7 @@ class Dashboard:
         for t in data.get("recent_trades", [])[:5]:
             pnl = t.get("pnl", 0)
             style = "green" if pnl >= 0 else "red"
-            table.add_row(f"  {t.get('symbol', '')}", Text(f"${pnl:+,.2f}", style=style))
+            sym = t.get('symbol', '')
+            table.add_row(f"  {sym}", Text(f"${pnl:+,.2f}", style=style))
 
         return Panel(table)
