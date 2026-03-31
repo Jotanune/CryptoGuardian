@@ -11,9 +11,11 @@ from __future__ import annotations
 import asyncio
 import random
 from abc import ABC, abstractmethod
-from collections.abc import Callable, Coroutine
 from dataclasses import dataclass
-from typing import Any, TypeVar
+from typing import TYPE_CHECKING, Any, TypeVar
+
+if TYPE_CHECKING:
+    from collections.abc import Callable, Coroutine
 
 from loguru import logger
 
