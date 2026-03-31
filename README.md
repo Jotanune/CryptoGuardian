@@ -2,11 +2,22 @@
 
 **Autonomous 24/7 cryptocurrency trading bot operating on Hyperliquid DEX with dual strategy engines.**
 
+[![CI](https://github.com/Jotanune/CryptoGuardian/actions/workflows/ci.yml/badge.svg)](https://github.com/Jotanune/CryptoGuardian/actions/workflows/ci.yml)
 [![Python 3.12+](https://img.shields.io/badge/Python-3.12+-blue)](https://www.python.org/)
 [![Hyperliquid](https://img.shields.io/badge/Exchange-Hyperliquid%20DEX-purple)](https://hyperliquid.xyz/)
 [![Tests](https://img.shields.io/badge/Tests-119%20passed-brightgreen)]()
 [![Docker](https://img.shields.io/badge/Deploy-Docker-blue)](https://www.docker.com/)
+[![Code Style](https://img.shields.io/badge/Code%20Style-Ruff-black)](https://github.com/astral-sh/ruff)
+[![Type Check](https://img.shields.io/badge/Type%20Check-Mypy%20Strict-blue)](https://mypy-lang.org/)
 [![Status](https://img.shields.io/badge/Status-Live%20(Paper)-yellow)]()
+
+<!-- 
+🎥 TODO: Record a 10-second GIF of the Rich dashboard running live.
+   Run: python dashboard_demo.py
+   Record with: asciinema rec demo.cast && agg demo.cast assets/dashboard.gif --theme monokai
+   Then uncomment:
+   ![Dashboard](assets/dashboard.gif)
+-->
 
 ---
 
@@ -232,6 +243,63 @@ Ubuntu 24.04 VPS (OVH)
 ```
 $ pytest --tb=short
 ========================= 119 passed in 4.2s =========================
+```
+
+See full breakdown: [`tests/test_output.md`](tests/test_output.md)
+
+---
+
+## Code Samples
+
+This repository includes **sanitized excerpts** from the production codebase. No strategy logic or parameters are exposed.
+
+### [`showcase/`](showcase/) — Core Infrastructure
+
+| File | What it demonstrates |
+|------|---------------------|
+| [`websocket_client.py`](showcase/websocket_client.py) | Async WebSocket with exponential backoff, channel dispatch, auto-reconnect |
+| [`risk_manager.py`](showcase/risk_manager.py) | 8 pre-trade risk gates, drawdown monitoring, circuit breaker, position sizing |
+| [`kill_switch.py`](showcase/kill_switch.py) | Emergency shutdown with retry logic, position closure, Telegram alerts |
+| [`async_utils.py`](showcase/async_utils.py) | Generic retry with backoff, async component lifecycle management |
+| [`dashboard.py`](showcase/dashboard.py) | Rich terminal UI with live-refreshing positions, P/L, system status |
+
+### [`examples/`](examples/) — Data Engineering
+
+| File | What it demonstrates |
+|------|---------------------|
+| [`download_data.py`](examples/download_data.py) | Paginated OHLCV download from Hyperliquid/Binance → Parquet (handles API limits) |
+
+### [`research/`](research/) — Statistical Analysis
+
+| File | What it demonstrates |
+|------|---------------------|
+| [`cointegration_analysis.ipynb`](research/cointegration_analysis.ipynb) | ADF test, Hurst exponent, Engle-Granger cointegration, z-score visualization |
+
+### [`logs/`](logs/) — Production Evidence
+
+| File | What it shows |
+|------|--------------|
+| [`sample_production.log`](logs/sample_production.log) | 5-minute extract of the live bot: bootstrap → WS connect → tick processing → signal evaluation → order execution |
+
+### DevOps
+
+| File | Description |
+|------|-------------|
+| [`Dockerfile`](Dockerfile) | Multi-stage build, non-root user, healthcheck |
+| [`docker-compose.yml`](docker-compose.yml) | Production deployment with memory limits, .env secrets |
+| [`.env.example`](.env.example) | All required environment variables (no real values) |
+| [`.github/workflows/ci.yml`](.github/workflows/ci.yml) | Ruff lint + Mypy strict + 119 tests + security scan + Docker build |
+
+---
+
+## Dashboard Demo
+
+The bot includes a [Rich](https://github.com/Textualize/rich)-powered terminal dashboard that displays real-time positions, P/L, and system status.
+
+```bash
+# Run the demo with mock data (no API keys needed):
+pip install rich
+python dashboard_demo.py
 ```
 
 ---

@@ -1,0 +1,59 @@
+2026-03-28 14:00:00.142 | INFO     | src.config.logging:setup_logging:52 | CryptoGuardian logging initialized — level: INFO, sinks: [stderr, file, json]
+2026-03-28 14:00:00.143 | INFO     | src.main:run:401 | ============================================================
+2026-03-28 14:00:00.143 | INFO     | src.main:run:402 | [SYSTEM] CryptoGuardian starting — mode: paper
+2026-03-28 14:00:00.143 | INFO     | src.main:run:403 | ============================================================
+2026-03-28 14:00:00.201 | INFO     | src.persistence.database:init:28 | Database initialized — sqlite+aiosqlite:///data/cryptoguardian.db
+2026-03-28 14:00:00.312 | INFO     | src.execution.hyperliquid_client:start:45 | Hyperliquid client connected — testnet: False
+2026-03-28 14:00:00.453 | INFO     | src.execution.kraken_bridge:__init__:31 | Kraken bridge initialized — API key: <REDACTED>
+2026-03-28 14:00:00.510 | INFO     | src.data.rpc_client:__init__:22 | Arbitrum RPC connected — block 287,194,021
+2026-03-28 14:00:00.622 | INFO     | src.execution.fill_predictor:load_model:41 | ML fill predictor loaded — accuracy: 73.2%, features: 8
+2026-03-28 14:00:00.623 | INFO     | src.strategy.microstructure:__init__:18 | MicrostructureAnalyzer ready — tracking OBI, TFI, velocity, spread
+2026-03-28 14:00:00.712 | INFO     | src.risk.risk_manager:check_new_day:72 | [RISK] New day: equity $2,847.32, peak $2,901.10, DD 1.85%, yesterday PnL $-12.40
+2026-03-28 14:00:00.810 | INFO     | src.portfolio.compounder:update:33 | [COMPOUND] Balance: $2,847.32 | Risk base: $2,847.32 | Anti-DD freeze: OFF
+2026-03-28 14:00:00.901 | INFO     | src.persistence.state_manager:restore:45 | State restored — 2 open positions, last save 2026-03-28T13:58:22Z (checksum OK)
+2026-03-28 14:00:01.022 | INFO     | src.data.websocket_client:start:98 | WebSocket client starting — wss://api.hyperliquid.xyz/ws
+2026-03-28 14:00:01.341 | INFO     | src.data.websocket_client:_connection_loop:125 | WebSocket connected to wss://api.hyperliquid.xyz/ws
+2026-03-28 14:00:01.542 | INFO     | src.data.websocket_client:_resubscribe:178 | Resubscribed to 29 channels (14 trades + 14 l2Book + 1 allMids)
+2026-03-28 14:00:01.601 | INFO     | src.monitor.health:start:28 | HealthChecker started — NTP drift: +2ms, HTTP /health on :8080
+2026-03-28 14:00:01.602 | INFO     | src.monitor.alerter:start:35 | Telegram bot started — 6 commands registered
+2026-03-28 14:00:01.603 | INFO     | src.main:run:512 | [SYSTEM] Subscribing to 14 symbols: ['ADA', 'APT', 'ARB', 'AVAX', 'BNB', 'BTC', 'DOGE', 'ETH', 'INJ', 'LINK', 'OP', 'SEI', 'SOL', 'SUI']
+2026-03-28 14:00:02.102 | INFO     | src.main:main_loop:88 | [SYSTEM] Main trading loop started
+2026-03-28 14:00:02.203 | INFO     | src.data.cache:update_mid_prices:55 | [CACHE] Mid prices updated — 14 symbols (BTC: $87,412.50, ETH: $2,041.80, SOL: $139.22)
+2026-03-28 14:00:02.401 | INFO     | src.data.orderbook:handle_l2_book:42 | [BOOK] BTC L2 snapshot — bid: $87,411.0 ask: $87,414.0 spread: 0.003% depth_ratio: 1.12
+2026-03-28 14:00:03.150 | INFO     | src.data.candle_builder:handle_trades:91 | [CANDLE] BTC trade — px: $87,413.20 sz: 0.142 (valid tick, 5 TFs tracking)
+2026-03-28 14:00:05.001 | INFO     | src.position.position_manager:evaluate_all:62 | [POS] Evaluating 2 open positions...
+2026-03-28 14:00:05.003 | INFO     | src.position.position_manager:evaluate_all:78 | [POS] BTC LONG — entry: $86,200.00, current: $87,412.50, PnL: +$48.50 (1.41%), bars: 14
+2026-03-28 14:00:05.004 | INFO     | src.position.position_manager:_check_trailing:112 | [POS] BTC — trailing stop updated: $86,800.00 → $87,050.00 (ATR trail)
+2026-03-28 14:00:05.005 | INFO     | src.position.position_manager:evaluate_all:78 | [POS] INJ/OP PAIRS — entry spread: 0.42σ, current: -0.18σ, PnL: +$22.10, bars: 8
+2026-03-28 14:00:05.201 | INFO     | src.strategy.smc_engine:evaluate_mtf:85 | [SMC] SOL — scanning 4H candles... PDH: $141.20, PDL: $136.80
+2026-03-28 14:00:05.202 | INFO     | src.strategy.smc_engine:evaluate_mtf:102 | [SMC] SOL — no sweep detected at current price $139.22
+2026-03-28 14:00:05.301 | INFO     | src.strategy.pairs_engine:evaluate:55 | [PAIRS] Evaluating 12 pairs — checking z-scores and cointegration health
+2026-03-28 14:00:05.410 | INFO     | src.strategy.pairs_engine:evaluate:78 | [PAIRS] AVAX/NEAR — z-score: 1.82, half-life: 18.3 bars, ADF p-value: 0.003 ✓
+2026-03-28 14:00:05.411 | INFO     | src.strategy.pairs_engine:evaluate:92 | [PAIRS] AVAX/NEAR — SIGNAL: SHORT spread at z=1.82 (threshold passed)
+2026-03-28 14:00:05.412 | INFO     | src.risk.risk_manager:can_open_trade:145 | [RISK] Pre-trade check for AVAX/NEAR: 8/8 gates passed ✓
+2026-03-28 14:00:05.413 | INFO     | src.risk.risk_manager:calculate_position_size:178 | [RISK] Size calc: balance=$2,847.32, risk=REDACTED%, SL_dist=REDACTED% → $285.00 USD
+2026-03-28 14:00:05.414 | INFO     | src.execution.fee_optimizer:decide_execution_type:42 | [FEE] AVAX/NEAR — ML fill prob: 0.68, spread: 0.04%, decision: MAKER (0.00% fee)
+2026-03-28 14:00:05.501 | INFO     | src.execution.order_manager:place_limit_order:88 | [ORDER] AVAX SELL limit $22.41 × 6.35 (post_only, timeout=10s)
+2026-03-28 14:00:05.812 | INFO     | src.execution.order_manager:place_limit_order:102 | [ORDER] AVAX SELL filled — avg: $22.41, latency: 311ms
+2026-03-28 14:00:05.813 | INFO     | src.execution.order_manager:place_limit_order:88 | [ORDER] NEAR BUY limit $6.82 × 20.81 (post_only, timeout=10s)
+2026-03-28 14:00:06.201 | INFO     | src.execution.order_manager:place_limit_order:102 | [ORDER] NEAR BUY filled — avg: $6.82, latency: 388ms
+2026-03-28 14:00:06.202 | INFO     | src.execution.fill_predictor:record_outcome:78 | [ML] Fill recorded — predicted: maker, actual: filled, volume: $285.00 (accuracy: 73.5%)
+2026-03-28 14:00:06.301 | INFO     | src.persistence.trade_journal:log_trade_open:42 | [JOURNAL] Trade opened — AVAX/NEAR PAIRS SHORT spread, entry z=1.82
+2026-03-28 14:00:06.401 | INFO     | src.monitor.alerter:alert_trade_open:55 | [TG] 📈 New trade: AVAX/NEAR SHORT | Z-score: 1.82 | Size: $285.00
+2026-03-28 14:00:06.501 | INFO     | src.persistence.state_manager:maybe_save:35 | [STATE] Auto-save — 3 positions, checksum: a4f2c8...
+2026-03-28 14:01:02.101 | INFO     | src.main:main_loop:88 | [SYSTEM] Loop tick — 3 open positions, equity: $2,849.12, daily PnL: +$1.80
+2026-03-28 14:01:02.301 | INFO     | src.data.cache:update_mid_prices:55 | [CACHE] Mid prices updated — 14 symbols
+2026-03-28 14:01:02.501 | INFO     | src.position.position_manager:evaluate_all:62 | [POS] Evaluating 3 open positions...
+2026-03-28 14:01:02.601 | INFO     | src.strategy.smc_engine:evaluate_mtf:102 | [SMC] BTC — no sweep at $87,450.00
+2026-03-28 14:01:02.701 | INFO     | src.strategy.smc_engine:evaluate_mtf:102 | [SMC] ETH — no sweep at $2,043.20
+2026-03-28 14:01:02.801 | INFO     | src.strategy.pairs_engine:evaluate:92 | [PAIRS] No new signals — all z-scores within thresholds
+2026-03-28 14:01:02.901 | INFO     | src.persistence.state_manager:maybe_save:38 | [STATE] Skipped save — no changes since last checkpoint
+2026-03-28 14:02:02.101 | INFO     | src.main:main_loop:88 | [SYSTEM] Loop tick — 3 open positions, equity: $2,850.01, daily PnL: +$2.69
+2026-03-28 14:02:02.501 | INFO     | src.position.position_manager:evaluate_all:62 | [POS] Evaluating 3 open positions...
+2026-03-28 14:02:02.503 | INFO     | src.position.position_manager:_check_breakeven:95 | [POS] BTC — break-even triggered at $86,200.00 (SL moved from $85,400.00)
+2026-03-28 14:02:02.601 | INFO     | src.data.orderbook:handle_l2_book:58 | [BOOK] ETH imbalance shift: 0.85 → 1.32 (buyers stepping in)
+2026-03-28 14:03:02.101 | INFO     | src.main:main_loop:88 | [SYSTEM] Loop tick — 3 open positions, equity: $2,851.40, daily PnL: +$4.08
+2026-03-28 14:03:45.201 | INFO     | src.monitor.health:_check_ntp:62 | [HEALTH] NTP sync OK — drift: +3ms (threshold: 500ms)
+2026-03-28 14:04:02.101 | INFO     | src.main:main_loop:88 | [SYSTEM] Loop tick — 3 open positions, equity: $2,852.11, daily PnL: +$4.79
+2026-03-28 14:04:02.501 | INFO     | src.position.position_manager:evaluate_all:78 | [POS] AVAX/NEAR — spread reverting: z=1.82 → z=1.54 (profit building)
+2026-03-28 14:04:15.301 | INFO     | src.data.websocket_client:_receive_loop:152 | [WS] Stats — messages: 12,847, latency: 42ms, uptime: 4m14s

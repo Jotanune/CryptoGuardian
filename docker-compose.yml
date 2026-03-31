@@ -1,0 +1,29 @@
+# CryptoGuardian — Docker Compose
+#
+# All secrets read from .env file (never hardcoded).
+# See .env.example for required variables.
+
+services:
+  bot:
+    build: .
+    container_name: cryptoguardian
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data          # SQLite DB + Parquet files
+      - ./logs:/app/logs          # Loguru output (JSON + text)
+      - ./config:/app/config      # pairs.toml configuration
+    ports:
+      - "8080:8080"               # Health check endpoint
+    deploy:
+      resources:
+        limits:
+          memory: 2g              # Hard memory cap
+          cpus: "2"               # CPU limit
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
